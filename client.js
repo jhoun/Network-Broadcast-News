@@ -1,19 +1,18 @@
 const net = require('net');
 
 
-//connects you to the socket from server
+//connects client from server
 const client = net.connect({port: 6969}, () => {
-  //you can see all the objects from the socket
+  // you can see all the objects from the client
   // console.log(client);
 
-  //this writes to the server your string
-  //process.stdin allows you to input your data
+  //writes data to server
   process.stdin.on('data', (data) => {
     client.write(data.toString());
   });
 
-
   console.log('connected to the server!');
+
 })
 
 // server writes it back to you

@@ -1,36 +1,37 @@
 //grabs nodes net module
 const net = require('net');
-var clients = [];
+var clientsArr = [];
 
-//server.address()
-var server = net.createServer((socket) => {
-  //welcomes you to the server
-    clients.push(socket);
+//creates a server
+var server = net.createServer((client) => {
 
-  //recieves the string from client and prints in server
-  socket.on('data', (data) => {
+  //immediately pushes new client to clientsArr
+  clientsArr.push(client);
+
+  //recieves the data from client
+  client.on('data', (data) => {
     // //the string from client is being written in the server
-    // socket.write(data.toString());
+    // client.write(data.toString());
 
     //saves the data from client to an array
-    for (var i = 0; i < clients.length; i ++){
+    for (var i = 0; i < clientsArr.length; i ++){
       //writes to every client in the array
-      if(clients[i] === socket){
+      if(clientsArr[i] === client){
         return;
       } else{
-      clients[i].write(data.toString())
+      clientsArr[i].write(data.toString())
       }
     }
 
   });
 
   //shows when ends
-  socket.on('end', () => {
+  client.on('end', () => {
     console.log("you have been disconnected");
   })
 
-  //this will appear if SOCKET emits error
-  socket.on('error', (err) => {
+  //this will appear if client emits error
+  client.on('error', (err) => {
     throw err;
   })
 
