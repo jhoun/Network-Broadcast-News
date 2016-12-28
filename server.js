@@ -5,8 +5,6 @@ var clientsArr = [];
 //creates a server
 var server = net.createServer((client) => {
 
-
-
   //immediately pushes new client to clientsArr when client connect
   client.write('Please create user name\n' );
   clientsArr.push(client);
@@ -19,8 +17,14 @@ var server = net.createServer((client) => {
 
     //checks if client has client.name value
     if(client.name === undefined){
+      //checkts to see if your username is 'admin'
+      if (data.toString().trim().toLowerCase() === 'admin'){
+        client.write('invalid user name\n');
+        client.write('Please create another user name\n' );
+      } else {
       //assigns the client data to client name
       client.name = data.toString().trim();
+      }
     } else {
       //loops through all clients in clientsArr
       for (var i = 0; i < clientsArr.length; i++){
@@ -36,8 +40,6 @@ var server = net.createServer((client) => {
     }
 
   });
-
-
 
   //shows when ends
   client.on('end', () => {
