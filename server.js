@@ -5,36 +5,45 @@ var clientsArr = [];
 //creates a server
 var server = net.createServer((client) => {
 
-  //immediately pushes new client to clientsArr when client connects
+
+
+  //immediately pushes new client to clientsArr when client connect
+  client.write('Please create user name\n' );
   clientsArr.push(client);
-  console.log(clientsArr.length, "initial");
+
 
   //recieves the data from client
   client.on('data', (data) => {
     // //writes it back to the client whoe sent it
     // client.write(data.toString());
+  if(client.name === undefined){
+    client.name = data.toString().trim();
+  }
 
+  else{
 
     //loops through all clients in clientsArr
     for (var i = 0; i < clientsArr.length; i++){
       //if the client matches the client who sent the message
-      if(clientsArr[i] === client){
+      if(clientsArr[i].name === client.name){
 
       } else {
         // write this message to all clients
-        clientsArr[i].write(data.toString());
+        clientsArr[i].write(client.name + ": " + data.toString());
       }
     }
-
+  }
   });
 
   //shows when ends
   client.on('end', () => {
     for (var i = 0; i < clientsArr.length; i++){
+      //if client in the array equals this client
       if (clientsArr[i] === client){
+      //then remove this client from the array
       clientsArr.splice(clientsArr[i], 1);
-      console.log(clientsArr.length, "after");
-      console.log('has been disconnected');
+      console.log(clientsArr.length);
+      console.log('client has been disconnected');
       }
     }
   });
