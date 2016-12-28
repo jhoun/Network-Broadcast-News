@@ -8,11 +8,17 @@ var server = net.createServer((socket) => {
 
   //shows that data is being sent
   socket.on('data', (data) => {
+    console.log(data.toString());
     console.log('you sent data!');
   });
 
+  //shows when ends
+  socket.on('end', () => {
+    console.log("you have been disconnected");
+  })
+
   //this will appear if SOCKET emits error
-  client.on('error', (err) => {
+  socket.on('error', (err) => {
     throw err;
   })
 
