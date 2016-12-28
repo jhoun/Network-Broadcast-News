@@ -16,24 +16,28 @@ var server = net.createServer((client) => {
   client.on('data', (data) => {
     // //writes it back to the client whoe sent it
     // client.write(data.toString());
-  if(client.name === undefined){
-    client.name = data.toString().trim();
-  }
 
-  else{
+    //checks if client has client.name value
+    if(client.name === undefined){
+      //assigns the client data to client name
+      client.name = data.toString().trim();
+    } else {
+      //loops through all clients in clientsArr
+      for (var i = 0; i < clientsArr.length; i++){
 
-    //loops through all clients in clientsArr
-    for (var i = 0; i < clientsArr.length; i++){
-      //if the client matches the client who sent the message
-      if(clientsArr[i].name === client.name){
+        //if the client matches the client who sent the message
+        if(clientsArr[i].name === client.name){
 
-      } else {
-        // write this message to all clients
-        clientsArr[i].write(client.name + ": " + data.toString());
+        } else {
+          // write this message to all clients
+          clientsArr[i].write(client.name + ": " + data.toString());
+        }
       }
     }
-  }
+
   });
+
+
 
   //shows when ends
   client.on('end', () => {
@@ -54,8 +58,14 @@ var server = net.createServer((client) => {
     throw err;
   });
 
+});
 
 
+//admin broadcast(should be its own seperate event outside)
+process.stdin.on('data', (data) => {
+  for (var i = 0; i < clientsArr.length; i++){
+    clientsArr[i].write('[ADMIN] ' + data.toString());
+  }
 });
 
 //this will appear if SERVER emits error
