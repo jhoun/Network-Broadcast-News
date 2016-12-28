@@ -7,6 +7,7 @@ var server = net.createServer((client) => {
 
   //immediately pushes new client to clientsArr when client connects
   clientsArr.push(client);
+  console.log(clientsArr.length, "initial");
 
   //recieves the data from client
   client.on('data', (data) => {
@@ -30,8 +31,11 @@ var server = net.createServer((client) => {
   //shows when ends
   client.on('end', () => {
     for (var i = 0; i < clientsArr.length; i++){
-    clientsArr.splice(clientsArr[i], 1);
-    console.log(clientsArr[i].remotePort + 'has been disconnected');
+      if (clientsArr[i] === client){
+      clientsArr.splice(clientsArr[i], 1);
+      console.log(clientsArr.length, "after");
+      console.log('has been disconnected');
+      }
     }
   });
 
