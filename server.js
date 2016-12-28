@@ -4,7 +4,6 @@ var clientsArr = [];
 
 //creates a server
 var server = net.createServer((client) => {
-
   //immediately pushes new client to clientsArr when client connect
   client.write('Please create user name\n' );
   clientsArr.push(client);
@@ -12,7 +11,8 @@ var server = net.createServer((client) => {
 
   //recieves the data from client
   client.on('data', (data) => {
-    // //writes it back to the client whoe sent it
+
+    // //writes it back to the client who sent it
     // client.write(data.toString());
 
     //checks if client has client.name value
@@ -52,6 +52,13 @@ var server = net.createServer((client) => {
       console.log('client has been disconnected');
       }
     }
+
+    // process.stdin.on('data', (data) => {
+    //   if (data.toString().trim() === 'kick'){
+    //     console.log('it works');
+    //   }
+    // });
+
   });
 
 
@@ -65,6 +72,9 @@ var server = net.createServer((client) => {
 
 //admin broadcast(should be its own seperate event outside)
 process.stdin.on('data', (data) => {
+  // if (data.toString().trim() === 'kick'){
+  //   clientsArr[0].end('fuck you');
+  // }
   for (var i = 0; i < clientsArr.length; i++){
     clientsArr[i].write('[ADMIN] ' + data.toString());
   }
