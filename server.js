@@ -5,21 +5,23 @@ var clientsArr = [];
 //creates a server
 var server = net.createServer((client) => {
 
-  //immediately pushes new client to clientsArr
+  //immediately pushes new client to clientsArr when client connects
   clientsArr.push(client);
 
   //recieves the data from client
   client.on('data', (data) => {
-    // //the string from client is being written in the server
+    // //writes it back to the client whoe sent it
     // client.write(data.toString());
 
-    //saves the data from client to an array
-    for (var i = 0; i < clientsArr.length; i ++){
-      //writes to every client in the array
+
+    //loops through all clients in clientsArr
+    for (var i = 0; i < clientsArr.length; i++){
+      //if the client matches the client who sent the message
       if(clientsArr[i] === client){
-        return;
-      } else{
-      clientsArr[i].write(data.toString())
+
+      } else {
+        // write this message to all clients
+        clientsArr[i].write(data.toString());
       }
     }
 
@@ -27,13 +29,17 @@ var server = net.createServer((client) => {
 
   //shows when ends
   client.on('end', () => {
-    console.log("you have been disconnected");
-  })
+    for (var i = 0; i < clientsArr.length; i++){
+    clientsArr.splice(clientsArr[i], 1);
+    console.log(clientsArr[i].remotePort + 'has been disconnected');
+    }
+  });
+
 
   //this will appear if client emits error
   client.on('error', (err) => {
     throw err;
-  })
+  });
 
 
 
@@ -42,7 +48,7 @@ var server = net.createServer((client) => {
 //this will appear if SERVER emits error
 server.on('error', (err) => {
   throw err;
-})
+});
 
 
 //starts your server
