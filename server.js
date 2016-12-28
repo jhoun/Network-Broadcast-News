@@ -1,15 +1,27 @@
 //grabs nodes net module
 const net = require('net');
+var clients = [];
 
 //server.address()
 var server = net.createServer((socket) => {
   //welcomes you to the server
-  console.log('Welcome', socket);
+    clients.push(socket);
 
-  //shows that data is being sent
+  //recieves the string from client and prints in server
   socket.on('data', (data) => {
-    console.log(data.toString());
-    console.log('you sent data!');
+    // //the string from client is being written in the server
+    // socket.write(data.toString());
+
+    //saves the data from client to an array
+    for (var i = 0; i < clients.length; i ++){
+      //writes to every client in the array
+      if(clients[i] === socket){
+        return;
+      } else{
+      clients[i].write(data.toString())
+      }
+    }
+
   });
 
   //shows when ends
@@ -21,6 +33,8 @@ var server = net.createServer((socket) => {
   socket.on('error', (err) => {
     throw err;
   })
+
+
 
 });
 
